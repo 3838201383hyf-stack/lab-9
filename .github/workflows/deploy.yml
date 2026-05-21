@@ -12,6 +12,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: write
     
     steps:
       - uses: actions/checkout@v4
@@ -35,13 +37,9 @@ jobs:
       - name: Generate HTML report
         run: python src/render_report.py
       
-      - name: Copy files to docs
-        run: |
-          cp assets/confusion_matrix.png docs/
-          cp assets/accuracy.txt docs/
-      
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
+          keep_files: false
