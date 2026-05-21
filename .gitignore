@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+assets/*.pkl
+assets/*.png
+assets/*.txt

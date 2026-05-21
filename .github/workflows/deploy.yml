@@ -1,0 +1,44 @@
+name: CD - Deploy Report
+
+on:
+  workflow_run:
+    workflows: ["CI - Train and Test"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download CI artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: model-assets
+          path: assets/
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      
+      - name: Generate HTML report
+        run: python src/render_report.py
+      
+      - name: Copy confusion matrix to docs
+        run: cp assets/confusion_matrix.png docs/
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
