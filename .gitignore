@@ -1,5 +1,14 @@
 __pycache__/
+<<<<<<< HEAD
 *.pyc
 assets/*.pkl
 assets/*.png
 assets/*.txt
+=======
+.pytest_cache/
+.venv/
+artifacts/
+assets/*
+!assets/.gitkeep
+site/
+>>>>>>> 503b77ed186bb3c706aa379cf9205ae5f342d33d
