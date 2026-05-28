@@ -1,9 +1,17 @@
 import os
+import shutil
 
 def generate_html_report():
+    print("=== Starting report generation ===")
+
     with open('assets/accuracy.txt', 'r') as f:
         accuracy = f.read().strip()
-    
+    print(f"Loaded accuracy: {accuracy}")
+
+    os.makedirs('docs', exist_ok=True)
+    shutil.copy('assets/confusion_matrix.png', 'docs/confusion_matrix.png')
+    print("Image copied to docs/")
+
     html_content = f"""<!DOCTYPE html>
 <html>
 <head>
@@ -26,11 +34,10 @@ def generate_html_report():
     </div>
 </body>
 </html>"""
-    
-    os.makedirs('docs', exist_ok=True)
+
     with open('docs/index.html', 'w') as f:
         f.write(html_content)
-    print("HTML report generated at docs/index.html")
+    print("✅ HTML report generated at docs/index.html")
 
 if __name__ == "__main__":
     generate_html_report()
